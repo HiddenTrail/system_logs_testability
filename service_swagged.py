@@ -1,21 +1,23 @@
 from flask import Flask, request, jsonify
 from flask_restx import Api, Resource, fields, abort, reqparse
 import logging
+import os
 from datetime import datetime
+import time
+import random
 
 app = Flask(__name__)
-api = Api(app, version="1.0", title="Service API",
-          description="A simple service management API")
+api = Api(app, version="1.0", title="Service API", description="A simple service management API")
 
-# Globaalit muuttujat
+# global variables
 service_running = False
 data_store = {}
 
-# Lokitusasetukset
+# logging settings
 logging.basicConfig(filename="service.log", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger(__name__)
 
-# Malli datalle
+# model for data
 data_model = api.model("Data", {
     "id": fields.String(required=True, description="Data identifier"),
     "data": fields.String(required=True, description="Data content")
@@ -29,6 +31,8 @@ class StartService(Resource):
         if service_running:
             abort(409, "Service already running")
         service_running = True
+        logger.info("Service starting")
+        time.sleep(random.randint(3, 12))
         logger.info("Service started")
         return "Service started"
 
@@ -37,21 +41,24 @@ class StartService(Resource):
 class StopService(Resource):
     def get(self):
         global service_running
+        if not service_running:
+            abort(404)
         service_running = False
+        logger.info("Service stopping")
+        time.sleep(random.randint(2, 8))
         logger.info("Service stopped")
         return "Service stopped"
 
 
-@api.route("/api/restart")
-class RestartService(Resource):
+@api.route("/api/shutdown")
+class ShutdownService(Resource):
     def get(self):
         global service_running
         if not service_running:
             abort(404)
         service_running = False
-        service_running = True
-        logger.info("Service restarted")
-        return "Service restarted"
+        logger.info("Service shut down")
+        os._exit(0)
 
 
 @api.route("/api/data", methods=["POST"])
@@ -61,7 +68,7 @@ class AddData(Resource):
         if not service_running:
             abort(404)
         data = request.json
-        data_id = data.get("id")  # Oletetaan, että jokaisella datalla on uniikki "id"
+        data_id = data.get("id")
         if data_id in data_store:
             return {"error": "Data with the given id already exists"}, 400
         data_store[data_id] = data
@@ -86,7 +93,7 @@ class DataOperations(Resource):
             abort(404)
         if data_id in data_store:
             data = request.json
-            data_store[data_id] = data  # Päivitetään data annetulla data_id:llä
+            data_store[data_id] = data
             logger.info(f"Data updated: {data}")
             return data, 200
         else:
@@ -97,7 +104,7 @@ class DataOperations(Resource):
         if not service_running:
             abort(404)
         if data_id in data_store:
-            del data_store[data_id]  # Poistetaan data annetulla data_id:llä
+            del data_store[data_id]
             logger.info(f"Data deleted with id: {data_id}")
             return "Data deleted", 200
         else:
@@ -122,7 +129,7 @@ class LocalTime(Resource):
         return {"local_time": local_time}
 
 
-# Parserit GET-parametreille
+# parsers for GET parameters
 add_update_parser = reqparse.RequestParser()
 add_update_parser.add_argument("id", type=str, required=True, help="Data's ID")
 add_update_parser.add_argument("data", type=str, required=True, help="Data's content")

@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify, abort
 import logging
+import threading
+from werkzeug.serving import make_server
 from datetime import datetime
 
 app = Flask(__name__)
@@ -9,8 +11,29 @@ service_running = False
 data_store = {}
 
 # Asetetaan lokitus. Tallennetaan lokitiedot tiedostoon `service.log`.
-logging.basicConfig(filename="service.log", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+logging.basicConfig(filename="../service.log", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger(__name__)
+
+
+class ServerThread(threading.Thread):
+
+    def __init__(self, app):
+        threading.Thread.__init__(self)
+        self.srv = make_server("127.0.0.1", 8080, app)
+        self.ctx = app.app_context()
+        self.ctx.push()
+
+    def run(self):
+        logger.info("Starting server")
+        self.srv.serve_forever()
+
+    def shutdown(self):
+        self.srv.shutdown()
+        logger.info("Service Fullstopped")
+
+
+server_thread = ServerThread(app)
+
 
 @app.route("/api/start", methods=["GET"])
 def start_service():
@@ -21,12 +44,25 @@ def start_service():
     logger.info("Service started")
     return "Service started"
 
+
 @app.route("/api/stop", methods=["GET"])
 def stop_service():
     global service_running
     service_running = False
     logger.info("Service stopped")
     return "Service stopped"
+
+
+@app.route("/api/fullstop", methods=["GET"])
+def full_stop():
+    def shutdown_server():
+        global server_thread
+        stop_service()
+        server_thread.shutdown()
+
+    threading.Thread(target=shutdown_server).start()
+    return "Shutting down the server"
+
 
 @app.route("/api/restart", methods=["GET"])
 def restart_service():
@@ -37,6 +73,7 @@ def restart_service():
     service_running = True
     logger.info("Service restarted")
     return "Service restarted"
+
 
 @app.route("/api/data", methods=["POST"])
 def add_data():
@@ -61,6 +98,14 @@ def get_data(data_id):
     else:
         logger.warning(f"Getting data with id {data_id}, data not found")
         return "Data not found", 404
+
+
+@app.route("/api/data", methods=["GET"])
+def list_data():
+    if not service_running:
+        abort(404)
+    logger.info("Returning all data")
+    return jsonify(data_store)
 
 
 @app.route("/api/data/<data_id>", methods=["PUT"])
@@ -88,14 +133,6 @@ def delete_data(data_id):
     else:
         logger.warning(f"Deleting data with id {data_id}, data not found")
         return "Data not found", 404
-
-
-@app.route("/api/data", methods=["GET"])
-def list_data():
-    if not service_running:
-        abort(404)
-    logger.info("Returning all data")
-    return jsonify(data_store)
 
 
 @app.route('/api/neitiaika', methods=['GET'])
@@ -140,4 +177,4 @@ def delete_simple_data():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=8080)
+    server_thread.start()
