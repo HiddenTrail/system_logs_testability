@@ -1,0 +1,92 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4	Järjestelmälokien hyödyntäminen
+5	Testikohtaiset lokileikkeet
+10	Harvoin esiintyvät virheet
+11	Kuorman alla esiintyvät virheet
+
+
+----
+
+Kaksi eri asiaa:
+
+- testinjälkeinen lokien hyödyntäminen
+	* mikä meni testissä pieleen lokien mukaan
+
+- testinaikainen lokien hyödyntäminen
+    * esim. "odota kunnes serveri käynnistynyt"
+
+
+
+4	Järjestelmälokien hyödyntäminen
+
+"MVP: lukeminen filepathin ja URL:n takaa"
+
+[_] tarvitaan joku pieni webiserveri jolla voi näyttää hakemiston sisältöä
+
+[x] tarvitaan ohjelma joka tuottaa lokia ja jota voi testata
+
+
+5	Testikohtaiset lokileikkeet
+
+[_] regexp-konfiguraatio minkä avulla tehdään aikaleima -> lokirivi
+[_] joku nuuskutustoteutus lukemiselle ettei tarvitse kahlata aina koko lokia läpi
+
+
+10	Harvoin esiintyvät virheet
+
+[x] tarvitaan ohjelma joka päätyy satunnaisesti virheeseen harvakseltaan
+
+      [_] ohjelmaa voisi monimutkaistaa tuottamaan enemmän aiheeseen liittymätöntä lokitusta
+
+
+11	Kuorman alla esiintyvät virheet
+
+[_] tarvitaan ohjelma joka toimii pienellä kuormalla mutta kaatuu isolla kuormalla
+        * transaktio-ongelma
+        * resurssien loppuminen
