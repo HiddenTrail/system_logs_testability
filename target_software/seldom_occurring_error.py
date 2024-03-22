@@ -9,15 +9,15 @@ def lucky_number(meaningless_parameter=0):
 
     luckynumber = None
     if meaningless_parameter:
-        logging.debug(f"sleeping {meaningless_parameter} ms")
+        logging.info(f"sleeping {meaningless_parameter} ms")
         time.sleep(meaningless_parameter/1000)
     try:
         thousands = datetime.datetime.now().microsecond // 1000
         parts_million = abs(1000000 // (thousands-13))
         luckynumber = sum(int(digit) for digit in str(parts_million))
-        logging.debug(f"timestamp thousand: {thousands}, parts million: {parts_million}, lucky number: {luckynumber}")
+        logging.info(f"timestamp thousand: {thousands}, parts million: {parts_million}, lucky number: {luckynumber}")
     except Exception as e:
-        logging.debug(f"error happened: {e}")
+        logging.error(f"error happened: {e}")
 
     return luckynumber
 
