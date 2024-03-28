@@ -3,7 +3,7 @@ import logging
 import sys
 import time
 
-logging.basicConfig(filename="luckynumber.log", level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(filename="logs/luckynumber.log", level=logging.DEBUG, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def lucky_number(meaningless_parameter=0):
 

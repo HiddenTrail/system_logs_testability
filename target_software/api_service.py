@@ -14,7 +14,7 @@ service_running = False
 data_store = {}
 
 # logging settings
-logging.basicConfig(filename="service.log", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s %(message)s")
+logging.basicConfig(filename="logs/service.log", level=logging.DEBUG, format="%(asctime)s %(levelname)s %(name)s %(message)s")
 logger = logging.getLogger(__name__)
 
 # model for data
