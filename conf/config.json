@@ -1,5 +1,12 @@
-{
-	"timestamps": [
-		"%Y-%m-%d %H:%M:%S,%f"
-	]
-}
+[
+	{
+		"regexp": "(\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3})",
+		"strptime": "Y-%m-%d %H:%M:%S,%f"
+	},
+	{
+		"#comment": "Notice that JSON requires escapes to be double escaped",
+		"regexp": "\\[(.+)\\]",
+		"strptime": "%Y-%m-%dT%H:%M:%S.%fZ"
+
+	}	
+]
