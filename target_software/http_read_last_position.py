@@ -24,6 +24,10 @@ time.sleep(30)
 print("done sleeping")
 
 # Oletetaan, että myöhemmin teet toisen pyynnön
-new_data, new_position = read_new_data_with_range(url, initial_position)
+new_data, new_position2 = read_new_data_with_range(url, new_position)
 print("uusi data ------------------")
 print(new_data)
+
+# This works with Nginx, Node.js http-server
+
+# Does not work with Python http-server
