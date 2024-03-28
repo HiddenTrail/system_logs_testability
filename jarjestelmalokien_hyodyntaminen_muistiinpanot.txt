@@ -1,50 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 4	Järjestelmälokien hyödyntäminen
 5	Testikohtaiset lokileikkeet
 10	Harvoin esiintyvät virheet
@@ -67,15 +21,33 @@ Kaksi eri asiaa:
 
 "MVP: lukeminen filepathin ja URL:n takaa"
 
-[_] tarvitaan joku pieni webiserveri jolla voi näyttää hakemiston sisältöä
+[x] tarvitaan joku pieni webiserveri jolla voi näyttää hakemiston sisältöä
+
+        -> valittu Node.js http-server
+
+            npm install -g http-server
+
+            (start_web_server.sh ja stop_web_server.sh)
 
 [x] tarvitaan ohjelma joka tuottaa lokia ja jota voi testata
+
+        -> api_service.py, monkey.py, seldom_occurring_error.py
+
 
 
 5	Testikohtaiset lokileikkeet
 
-[_] regexp-konfiguraatio minkä avulla tehdään aikaleima -> lokirivi
-[_] joku nuuskutustoteutus lukemiselle ettei tarvitse kahlata aina koko lokia läpi
+[x] regexp-konfiguraatio minkä avulla tehdään aikaleima -> lokirivi
+
+        [x] regexp
+        [x] strptime
+
+
+[x] joku nuuskutustoteutus lukemiselle ettei tarvitse kahlata aina koko lokia läpi
+
+        -> http_read_last_position.py
+        -> Node.js http-server tukee positio-ominaisuutta
+
 
 
 10	Harvoin esiintyvät virheet
@@ -83,6 +55,9 @@ Kaksi eri asiaa:
 [x] tarvitaan ohjelma joka päätyy satunnaisesti virheeseen harvakseltaan
 
       [_] ohjelmaa voisi monimutkaistaa tuottamaan enemmän aiheeseen liittymätöntä lokitusta
+
+            -> monkey.py
+
 
 
 11	Kuorman alla esiintyvät virheet
