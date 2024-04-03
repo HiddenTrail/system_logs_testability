@@ -16,6 +16,8 @@ Kaksi eri asiaa:
     * esim. "odota kunnes serveri käynnistynyt"
 
 
+Taustoitusta ja apuohjelmia
+---------------------------
 
 4	Järjestelmälokien hyödyntäminen
 
@@ -65,3 +67,33 @@ Kaksi eri asiaa:
 [_] tarvitaan ohjelma joka toimii pienellä kuormalla mutta kaatuu isolla kuormalla
         * transaktio-ongelma
         * resurssien loppuminen
+
+        [_] toteutus rajapintaan
+        [_] käyttämään tietokantaa
+
+
+
+Varsinainen toteutus
+--------------------
+
+[_] Luokka joka sisältää toteutuksen lokien lukemiselle
+
+        [_] tiedostosta
+        [_] urlista
+
+[_] Samaan luokkaan toteutus lokien leikkaamiseen
+
+        [_] parametreina alku- ja loppuaika, toleranssi sekä tuloshakemisto
+
+[_] Robotti-kirjasto joka hyödyntää ylläolevaa luokkaa
+
+        [_] Assert Log Contains
+        [_] Assert Log Does Not Contains
+        [_] Wait Until Log Contains
+
+        [_] Slice Logs
+
+[_] Robotti-testi joka "testaa" toteutuksia hyödyntäen loki-keywordeja
+
+[_] Kuorman alla esiintyviä virheitä varten tarvitaan JMeter-toteutus joka testaa rajapintaa
+
