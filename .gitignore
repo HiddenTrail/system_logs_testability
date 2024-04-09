@@ -3,3 +3,4 @@
 service.log
 luckynumber.log
 logs/
+__pycache__/
