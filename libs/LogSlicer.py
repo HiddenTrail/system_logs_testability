@@ -25,7 +25,7 @@ class LogSlicer:
         response = requests.get(url, headers=headers)
         new_data = response.content.decode("utf-8")
 
-        print("NEW DATA", new_data)
+        # print("NEW DATA", new_data)
 
         self.process_new_log_lines(url, new_data)
 
@@ -34,18 +34,26 @@ class LogSlicer:
 
     def process_new_log_lines(self, url, new_data):
 
+        prev_epoch = None
+
         lines = new_data.splitlines()
         matched_lines = ""
         for line in lines:
-            print("LINE:", line)
             epoch = self.parse_epoch_from_line(line)
-            print(f"epoch: {epoch}")
-
             if epoch:
+                if not prev_epoch:
+                    prev_epoch = epoch
+
+                self.log_lines[url].append((prev_epoch, matched_lines))
+                print("START--------------------------------------------------------------------------------------------------------")
+                print(f"{prev_epoch} -> {matched_lines}")
+                print("END----------------------------------------------------------------------------------------------------------\n")
+                prev_epoch = epoch
+                matched_lines = line
+            else:
                 if matched_lines != "":
                     matched_lines += "\n"
                 matched_lines += line
-                self.log_lines[url].append((epoch, matched_lines))
 
     def parse_epoch_from_line(self, line):
 
@@ -65,6 +73,12 @@ class LogSlicer:
         self._refresh(url)
 
         return self.data[url]
+
+    def get_log_lines(self, url, start_ts=None, end_ts=None):
+
+        self._refresh(url)
+
+        return self.log_lines[url]
 
 
 def _load_as_json(filename):
